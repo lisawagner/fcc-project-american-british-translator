@@ -17,7 +17,7 @@ module.exports = function (app) {
       next()
     }, (req, res, next) => {
       const input = req.body
-      if(input.text.length === 0){
+      if(input.text === ""){
         return res.json({
           error: "No text to translate"
         })
