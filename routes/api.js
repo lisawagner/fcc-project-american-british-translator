@@ -25,7 +25,7 @@ module.exports = function (app) {
       next()
     }, (req, res, next)=>{
       const input = req.body
-      if(input.locale !== "american-to-british" || input.locale !== "british-to-american"){
+      if(!/(american-to-british)|(british-to-american)/.test(input.locale)){
         return res.json({
           error: "Invalid value for locale field"
         })
