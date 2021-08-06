@@ -47,7 +47,9 @@ class Translator {
                 while((americanExpResult = americanExp.exec(text)) !== null){
                     const match = americanExpResult[0]
                     const search = match.toLowerCase()
-                    britishResult = britishResult.replace(match, `<span class="highlight">${americanOnly[search]}</span>` || `<span class="highlight">${americanToBritishSpelling[search]}</span>` || `<span class="highlight">${americanToBritishTitles[search]}</span>`)
+                    console.log(americanToBritishSpelling[search])
+                    britishResult = britishResult.replace(match, `<span class="highlight">${americanOnly[search] || americanToBritishSpelling[search] || americanToBritishTitles[search]}</span>`)
+                    console.log(britishResult)
                 }
                 const americanTimeExpResult = /\d{1,2}:\d{1,2}/g.exec(britishResult)
                 if(americanTimeExpResult){
@@ -65,7 +67,7 @@ class Translator {
                 while((britishExpResult = britishExp.exec(text)) !== null){
                     const match = britishExpResult[0]
                     const search = match.toLowerCase()
-                    americanResult = americanResult.replace(match, `<span class="highlight">${britishOnly[search]}</span>` || `<span class="highlight">${getKeyFromValue(americanToBritishSpellingKeys, americanToBritishSpelling, search)}</span>` || `<span class="highlight">${getKeyFromValue(americanToBritishTitlesKeys, americanToBritishTitles, search)}</span>`)
+                    americanResult = americanResult.replace(match, `<span class="highlight">${britishOnly[search] || getKeyFromValue(americanToBritishSpellingKeys, americanToBritishSpelling, search) || getKeyFromValue(americanToBritishTitlesKeys, americanToBritishTitles, search)}</span>`)
                 }
                 const britishTimeExpResult = /\d{1,2}.\d{1,2}/g.exec(americanResult)
                 if(britishTimeExpResult){
