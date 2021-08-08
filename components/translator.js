@@ -5,34 +5,11 @@ const britishOnly = require('./british-only.js')
 
 const americanOnlyKeys = Object.keys(americanOnly)
 const americanToBritishSpellingKeys = Object.keys(americanToBritishSpelling)
-const britishToAmericanSpellingValues = Object.values(americanToBritishSpelling)
 const americanToBritishTitlesKeys = Object.keys(americanToBritishTitles)
-const americanToBritishTitlesValues = Object.values(americanToBritishTitles)
+
 const britishOnlyKeys = Object.keys(britishOnly)
-
-const americanExp = new RegExp(americanToBritishTitlesKeys.reduce((acc, key, index)=>{
-    let result = acc.concat(`(${key})`)
-    if(index !== americanToBritishTitlesKeys.length - 1){
-        result = result.concat("|")
-    }
-    return result
-}, americanToBritishSpellingKeys.reduce((acc, key)=>{
-    return acc.concat(`(${key})|`)
-}, americanOnlyKeys.reduce((acc, key)=>{
-    return acc.concat(`(${key})|`)
-}, ""))), "gi")
-
-const britishExp = new RegExp(americanToBritishTitlesValues.reduce((acc, key, index)=>{
-    let result = acc.concat(`(${key})`)
-    if(index !== americanToBritishTitlesValues.length - 1){
-        result = result.concat("|")
-    }
-    return result
-}, britishToAmericanSpellingValues.reduce((acc, key)=>{
-    return acc.concat(`(${key})|`)
-}, britishOnlyKeys.reduce((acc, key)=>{
-    return acc.concat(`(${key})|`)
-}, ""))), "gi")
+const americanToBritishSpellingValues = Object.values(americanToBritishSpelling)
+const americanToBritishTitlesValues = Object.values(americanToBritishTitles)
 
 function getKeyFromValue(keys, obj, val){
     return keys.find(key=>obj[key] === val)
@@ -41,16 +18,68 @@ function getKeyFromValue(keys, obj, val){
 class Translator {
     translate(text, locale){
         switch(locale){
-            case "american-to-british":
+            case "american-to-british":{
                 let britishResult = text
-                let americanExpResult
-                while((americanExpResult = americanExp.exec(text)) !== null){
-                    const match = americanExpResult[0]
-                    const search = match.toLowerCase()
-                    console.log(americanToBritishSpelling[search])
-                    britishResult = britishResult.replace(match, `<span class="highlight">${americanOnly[search] || americanToBritishSpelling[search] || americanToBritishTitles[search]}</span>`)
-                    console.log(britishResult)
-                }
+                const words = britishResult.split(" ")
+                americanToBritishTitlesKeys.forEach(key=>{
+                    if(britishResult.indexOf(key) !== -1){
+                        const keySplit = key.split(" ")
+                        let canReplace
+                        if(keySplit.length === 1){
+                            for(let i = 0; i < words.length; i++){
+                                if(words[i] === key){
+                                    canReplace = true
+                                    break
+                                }
+                            }
+                        }else{
+                            canReplace = true
+                        }
+                        if(canReplace){
+                            britishResult = britishResult.replace(key, `<span class="highlight">${americanToBritishTitles[key]}</span>`)
+                        }
+                    }
+                })
+                americanOnlyKeys.forEach(key=>{
+                    if(britishResult.indexOf(key) !== -1){
+                        const keySplit = key.split(" ")
+                        let canReplace
+                        if(keySplit.length === 1){
+                            for(let i = 0; i < words.length; i++){
+                                const filtered = words[i].replace(".", "")
+                                if(filtered === key){
+                                    canReplace = true
+                                    break
+                                }
+                            }
+                        }else{
+                            canReplace = true
+                        }
+                        if(canReplace){
+                            britishResult = britishResult.replace(key, `<span class="highlight">${americanOnly[key]}</span>`)
+                        }
+                    }
+                })
+                americanToBritishSpellingKeys.forEach(key=>{
+                    if(britishResult.indexOf(key) !== -1){
+                        const keySplit = key.split(" ")
+                        let canReplace
+                        if(keySplit.length === 1){
+                            for(let i = 0; i < words.length; i++){
+                                const filtered = words[i].replace(".", "")
+                                if(filtered === key){
+                                    canReplace = true
+                                    break
+                                }
+                            }
+                        }else{
+                            canReplace = true
+                        }
+                        if(canReplace){
+                            britishResult = britishResult.replace(key, `<span class="highlight">${americanToBritishSpelling[key]}</span>`)
+                        }
+                    }
+                })
                 const americanTimeExpResult = /\d{1,2}:\d{1,2}/g.exec(britishResult)
                 if(americanTimeExpResult){
                     const match = americanTimeExpResult[0]
@@ -61,14 +90,69 @@ class Translator {
                     return "Everything looks good to me!"
                 }
                 return britishResult
-            case "british-to-american":
+            }
+            case "british-to-american":{
                 let americanResult = text
-                let britishExpResult
-                while((britishExpResult = britishExp.exec(text)) !== null){
-                    const match = britishExpResult[0]
-                    const search = match.toLowerCase()
-                    americanResult = americanResult.replace(match, `<span class="highlight">${britishOnly[search] || getKeyFromValue(americanToBritishSpellingKeys, americanToBritishSpelling, search) || getKeyFromValue(americanToBritishTitlesKeys, americanToBritishTitles, search)}</span>`)
-                }
+                const words = americanResult.split(" ")
+                americanToBritishTitlesValues.forEach(value=>{
+                    if(americanResult.indexOf(value) !== -1){
+                        const valueSplit = value.split(" ")
+                        let canReplace
+                        if(valueSplit.length === 1){
+                            for(let i = 0; i < words.length; i++){
+                                if(words[i] === value){
+                                    canReplace = true
+                                    break
+                                }
+                            }
+                        }else{
+                            canReplace = true
+                        }
+                        if(canReplace){
+                            americanResult = americanResult.replace(value, `<span class="highlight">${getKeyFromValue(americanToBritishTitlesKeys, americanToBritishTitles, value)}</span>`)
+                        }
+                    }
+                })
+                britishOnlyKeys.forEach(key=>{
+                    if(americanResult.indexOf(key) !== -1){
+                        const keySplit = key.split(" ")
+                        let canReplace
+                        if(keySplit.length === 1){
+                            for(let i = 0; i < words.length; i++){
+                                const filtered = words[i].replace(".", "")
+                                if(filtered === key){
+                                    canReplace = true
+                                    break
+                                }
+                            }
+                        }else{
+                            canReplace = true
+                        }
+                        if(canReplace){
+                            americanResult = americanResult.replace(key, `<span class="highlight">${britishOnly[key]}</span>`)
+                        }
+                    }
+                })
+                americanToBritishSpellingValues.forEach(value=>{
+                    if(americanResult.indexOf(value) !== -1){
+                        const valueSplit = value.split(" ")
+                        let canReplace
+                        if(valueSplit.length === 1){
+                            for(let i = 0; i < words.length; i++){
+                                const filtered = words[i].replace(".", "")
+                                if(filtered === value){
+                                    canReplace = true
+                                    break
+                                }
+                            }
+                        }else{
+                            canReplace = true
+                        }
+                        if(canReplace){
+                            americanResult = americanResult.replace(value, `<span class="highlight">${getKeyFromValue(americanToBritishSpellingKeys, americanToBritishSpelling, value)}</span>`)
+                        }
+                    }
+                })
                 const britishTimeExpResult = /\d{1,2}.\d{1,2}/g.exec(americanResult)
                 if(britishTimeExpResult){
                     const match = britishTimeExpResult[0]
@@ -79,6 +163,7 @@ class Translator {
                     return "Everything looks good to me!"
                 }
                 return americanResult
+            }
         }
     }
 }
