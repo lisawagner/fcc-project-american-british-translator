@@ -60,7 +60,7 @@ suite('Unit Tests', () => {
         assert.deepEqual(translator.translate("Have you met Mrs Kalyani?", "british-to-american"), "Have you met <span class=\"highlight\">Mrs.</span> Kalyani?")
     })
     test("british to american #9", ()=>{
-        assert(translator.translate("Prof Joyner of King's College, London.", "british-to-american"), "<span class=\"highlight\">Prof.</span> Joyner of King's College, London.")
+        assert.deepEqual(translator.translate("Prof Joyner of King's College, London.", "british-to-american"), "<span class=\"highlight\">Prof.</span> Joyner of King's College, London.")
     })
     test("british to american #10", ()=>{
         assert.deepEqual(translator.translate("Tea time is usually around 4 or 4.30.", "british-to-american"), "Tea time is usually around 4 or <span class=\"highlight\">4:30</span>.")
