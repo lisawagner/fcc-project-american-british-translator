@@ -9,7 +9,7 @@ module.exports = function (app) {
   app.route('/api/translate')
     .post((req, res, next)=>{
       const input = req.body
-      if(!input.text || !input.locale){
+      if((input.text === null || input.text === undefined) || !input.locale){
         return res.json({
           error: "Required field(s) missing"
         })
