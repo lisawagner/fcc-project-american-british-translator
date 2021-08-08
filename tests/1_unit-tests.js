@@ -65,16 +65,16 @@ suite('Unit Tests', () => {
     test("british to american #10", ()=>{
         assert.deepEqual(translator.translate("Tea time is usually around 4 or 4.30.", "british-to-american"), "Tea time is usually around 4 or <span class=\"highlight\">4:30</span>.")
     })
-    test("hightlight translated #1", ()=>{
+    test("highlight translated #1", ()=>{
         assert.deepEqual(translator.translate("Mangoes are my favorite fruit.", "american-to-british"), "Mangoes are my <span class=\"highlight\">favourite</span> fruit.")
     })
-    test("hightlight translated #2", ()=>{
+    test("highlight translated #2", ()=>{
         assert.deepEqual(translator.translate("I ate yogurt for breakfast.", "american-to-british"), "I ate <span class=\"highlight\">yoghurt</span> for breakfast.")
     })
-    test("hightlight translated #3", ()=>{
+    test("highlight translated #3", ()=>{
         assert.deepEqual(translator.translate("We watched the footie match for a while.", "british-to-american"), "We watched the <span class=\"highlight\">soccer</span> match for a while.")
     })
-    test("hightlight translated #4", ()=>{
+    test("highlight translated #4", ()=>{
         assert.deepEqual(translator.translate("Paracetamol takes up to an hour to work.", "british-to-american"), "<span class=\"highlight\">Tylenol</span> takes up to an hour to work.")
     })
 });
